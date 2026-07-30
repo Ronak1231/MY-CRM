@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Purchase' if kind=='purchase' else 'Sales' }} Contacts{% endblock %}
+{% block content %}
+{% set module = 'contact_purchase' if kind=='purchase' else 'contact_sales' %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">{{ 'Purchase Contacts' if kind=='purchase' else 'Sales Contacts' }}</h4>
+  {% if has_permission(current_user, module, 'create') %}
+  <a href="{{ url_for('contacts.new_purchase_contact' if kind=='purchase' else 'contacts.new_sales_contact') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Contact</a>
+  {% endif %}
+</div>
+<div class="card p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Name</th><th>Designation</th><th>{{ 'Vendor' if kind=='purchase' else 'Account' }}</th><th>Email</th><th>Phone</th><th>Owner</th><th></th></tr></thead>
+    <tbody>
+      {% for c in contacts %}
+      <tr>
+        <td>{{ c.name }} {% if c.is_primary %}<span class="badge bg-info">Primary</span>{% endif %}</td>
+        <td>{{ c.designation or '-' }}</td>
+        <td>{{ c.vendor.name if kind=='purchase' and c.vendor else (c.account.name if c.account else '-') }}</td>
+        <td>{{ c.email or '-' }}</td>
+        <td>{{ c.phone or '-' }}</td>
+        <td>{{ c.owner.full_name if c.owner else '-' }}</td>
+        <td class="text-end">
+          {% if has_permission(current_user, module, 'edit') %}
+          <a href="{{ url_for('contacts.edit_purchase_contact' if kind=='purchase' else 'contacts.edit_sales_contact', contact_id=c.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          {% endif %}
+          {% if has_permission(current_user, module, 'delete') %}
+          <form method="POST" action="{{ url_for('contacts.delete_purchase_contact' if kind=='purchase' else 'contacts.delete_sales_contact', contact_id=c.id) }}" class="d-inline" onsubmit="return confirm('Delete this contact?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">No contacts found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

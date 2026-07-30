@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if user else 'New' }} User - Admin{% endblock %}
+{% block content %}
+<h4 class="fw-bold mb-3">{{ 'Edit User' if user else 'New User' }}</h4>
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="card p-3 mb-3">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-control" name="full_name" value="{{ user.full_name if user else '' }}" required>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" value="{{ user.email if user else '' }}" {{ 'readonly' if user else '' }} required>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Password {% if user %}(leave blank to keep unchanged){% endif %}</label>
+        <input type="password" class="form-control" name="password" placeholder="{{ 'Unchanged' if user else 'Default: Welcome@123' }}">
+      </div>
+      <div class="col-md-4 form-check mt-4">
+        <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin" onchange="togglePerms()" {% if user and user.is_admin %}checked{% endif %}>
+        <label class="form-check-label" for="is_admin">Administrator (full access to everything)</label>
+      </div>
+      <div class="col-md-4 form-check mt-4">
+        <input type="checkbox" class="form-check-input" id="is_active_user" name="is_active_user" {% if not user or user.is_active_user %}checked{% endif %}>
+        <label class="form-check-label" for="is_active_user">Active (can log in)</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-3 mb-3" id="perms-card">
+    <h6 class="fw-bold mb-3">Module Permissions</h6>
+    <p class="text-muted small">Tick which actions this user is allowed to perform in each module. Unchecked = no access. "See all owners" lets this user see every user's records in that module, instead of just their own (plus anything granted below).</p>
+    <div class="table-responsive">
+      <table class="table table-bordered permission-table">
+        <thead><tr><th class="text-start">Module</th><th>View</th><th>Create</th><th>Edit</th><th>Delete</th><th>See all owners</th></tr></thead>
+        <tbody>
+          {% for module_key, module_label in modules %}
+          {% set existing = user.permission_for(module_key) if user else None %}
+          <tr>
+            <td class="text-start">{{ module_label }}</td>
+            {% for action in actions %}
+            <td>
+              <input type="checkbox" class="form-check-input" name="perm__{{ module_key }}__{{ action }}"
+                {% if existing and existing|attr('can_' ~ action) %}checked{% endif %}>
+            </td>
+            {% endfor %}
+            <td>
+              {% if module_key in owner_scoped_modules %}
+              <input type="checkbox" class="form-check-input" name="perm__{{ module_key }}__view_all"
+                {% if existing and existing.can_view_all %}checked{% endif %}>
+              {% else %}
+              <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if user %}
+    <p class="small text-muted mb-0">
+      Need to share just a <em>few</em> specific people's records instead of all of them?
+      Use <a href="{{ url_for('admin.data_access', user_id=user.id) }}">Data Access rules</a> for {{ user.full_name }}.
+    </p>
+    {% else %}
+    <p class="small text-muted mb-0">Save this user first, then use "Data Access" from the Users list to share specific other users' records with them.</p>
+    {% endif %}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save User</button>
+  <a href="{{ url_for('admin.users_list') }}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+
+<script>
+function togglePerms() {
+  const isAdmin = document.getElementById('is_admin').checked;
+  document.getElementById('perms-card').style.opacity = isAdmin ? 0.4 : 1;
+  document.querySelectorAll('#perms-card input[type=checkbox]').forEach(cb => cb.disabled = isAdmin);
+}
+document.addEventListener('DOMContentLoaded', togglePerms);
+</script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Sales Orders{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">Sales Orders</h4>
+  {% if has_permission(current_user, 'sales_order', 'create') %}
+  <a href="{{ url_for('sales.new_sales_order') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Sales Order</a>
+  {% endif %}
+</div>
+<div class="card p-3 mb-3">
+  <form class="row g-2">
+    <div class="col-md-3">
+      <select class="form-select" name="status" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for s in statuses %}<option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+<div class="card p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>SO #</th><th>Account</th><th>Status</th><th>Order Date</th><th>Total</th><th>Profit</th><th>Owner</th><th></th></tr></thead>
+    <tbody>
+      {% for so in orders %}
+      <tr>
+        <td><a href="{{ url_for('sales.view_sales_order', so_id=so.id) }}">{{ so.so_number }}</a></td>
+        <td>{{ so.account.name }}</td>
+        <td><span class="badge bg-info text-dark">{{ so.status }}</span></td>
+        <td>{{ so.order_date }}</td>
+        <td>₹{{ "%.2f"|format(so.total_amount) }}</td>
+        <td class="{{ 'text-success' if so.profit >= 0 else 'text-danger' }}">₹{{ "%.2f"|format(so.profit) }}</td>
+        <td>{{ so.owner.full_name if so.owner else '-' }}</td>
+        <td class="text-end">
+          {% if has_permission(current_user, 'sales_order', 'edit') %}
+          <a href="{{ url_for('sales.edit_sales_order', so_id=so.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          {% endif %}
+          {% if has_permission(current_user, 'sales_order', 'delete') %}
+          <form method="POST" action="{{ url_for('sales.delete_sales_order', so_id=so.id) }}" class="d-inline" onsubmit="return confirm('Delete this sales order?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-center text-muted py-4">No sales orders found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

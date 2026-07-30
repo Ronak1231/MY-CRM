@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Add User - Admin{% endblock %}
+{% block content %}
+<h4 class="fw-bold mb-3">Add User</h4>
+<!-- <div class="alert alert-info">
+  Simple admin mode is active. New users get no module access by default.
+  Turn on <code>advanced_admin</code> in <code>app/feature_flags.py</code> to unlock the full
+  user list, permission matrix, edit/delete, and audit log.
+</div> -->
+
+<div class="row g-3">
+  <div class="col-md-5">
+    <div class="card p-3">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-3">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-control" name="full_name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" name="password" placeholder="Default: Welcome@123">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Create User</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <div class="card p-3">
+      <h6 class="fw-bold">Recently Added</h6>
+      <table class="table table-sm mb-0">
+        <thead><tr><th>Name</th><th>Email</th><th>Created</th></tr></thead>
+        <tbody>
+          {% for u in recent_users %}
+          <tr><td>{{ u.full_name }}</td><td>{{ u.email }}</td><td>{{ u.created_at.strftime('%d %b %Y') }}</td></tr>
+          {% else %}
+          <tr><td colspan="3" class="text-muted text-center">No users yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">Products</h4>
+  {% if has_permission(current_user, 'product', 'create') %}
+  <a href="{{ url_for('product.new_product') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Product</a>
+  {% endif %}
+</div>
+<div class="card p-3 mb-3">
+  <form class="row g-2">
+    <div class="col-md-4"><input type="text" class="form-control" name="q" value="{{ q }}" placeholder="Search by name or SKU..."></div>
+    <div class="col-auto"><button class="btn btn-outline-primary">Search</button></div>
+  </form>
+</div>
+<div class="card p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>SKU</th><th>Name</th><th>Category</th><th>Unit</th><th>Cost</th><th>Selling Price</th><th>Stock</th><th>Owner</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for p in products %}
+      <tr>
+        <td>{{ p.sku }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.category or '-' }}</td>
+        <td>{{ p.unit or '-' }}</td>
+        <td>₹{{ "%.2f"|format(p.cost_price) }}</td>
+        <td>₹{{ "%.2f"|format(p.selling_price) }}</td>
+        <td>{{ p.stock_qty }} {% if p.stock_qty <= p.reorder_level %}<span class="badge bg-danger">Low</span>{% endif %}</td>
+        <td>{{ p.owner.full_name if p.owner else '-' }}</td>
+        <td>{% if p.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+        <td class="text-end">
+          {% if has_permission(current_user, 'product', 'edit') %}
+          <a href="{{ url_for('product.edit_product', product_id=p.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          {% endif %}
+          {% if has_permission(current_user, 'product', 'delete') %}
+          <form method="POST" action="{{ url_for('product.delete_product', product_id=p.id) }}" class="d-inline" onsubmit="return confirm('Delete this product?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="10" class="text-center text-muted py-4">No products found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

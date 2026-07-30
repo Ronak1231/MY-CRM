@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Login - CRM{% endblock %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="col-md-4">
+    <div class="card p-4">
+      <div class="text-center mb-3">
+        <i class="bi bi-diagram-3" style="font-size:2.5rem;color:#4e73df;"></i>
+        <h4 class="mt-2 fw-bold">CRM Login</h4>
+        <p class="text-muted small">Vendor, Sales &amp; CRM management</p>
+      </div>
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" required autofocus>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Sign in</button>
+      </form>
+      <hr>
+      <!-- <p class="small text-muted mb-0">Default admin: <code>admin@bizsuite.com</code> / <code>Admin@123</code></p> -->
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Audit Log - Admin{% endblock %}
+{% block content %}
+<h4 class="fw-bold mb-3">Audit Log</h4>
+<div class="card p-3">
+  <table class="table table-sm table-striped">
+    <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Module</th><th>Record</th></tr></thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.timestamp.strftime('%d %b %Y %H:%M') }}</td>
+        <td>{{ log.user.full_name if log.user else 'System' }}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.module }}</td>
+        <td>{{ log.record_id or '-' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}{{ opportunity.name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">{{ opportunity.name }}
+    {% if opportunity.stage == 'Won' %}<span class="badge bg-success">Won</span>
+    {% elif opportunity.stage == 'Lost' %}<span class="badge bg-danger">Lost</span>
+    {% else %}<span class="badge bg-primary">{{ opportunity.stage }}</span>{% endif %}
+  </h4>
+  {% if has_permission(current_user, 'opportunity', 'edit') %}
+  <a href="{{ url_for('crm.edit_opportunity', opportunity_id=opportunity.id) }}" class="btn btn-outline-primary">Edit</a>
+  {% endif %}
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3"><div class="card p-3"><small class="text-muted">Account</small><h6><a href="{{ url_for('crm.view_account', account_id=opportunity.account_id) }}">{{ opportunity.account.name }}</a></h6></div></div>
+  <div class="col-md-3"><div class="card p-3"><small class="text-muted">Amount</small><h6>₹{{ "%.2f"|format(opportunity.amount) }}</h6></div></div>
+  <div class="col-md-3"><div class="card p-3"><small class="text-muted">Probability</small><h6>{{ opportunity.probability }}%</h6></div></div>
+  <div class="col-md-3"><div class="card p-3"><small class="text-muted">Expected Close</small><h6>{{ opportunity.expected_close_date or '-' }}</h6></div></div>
+</div>
+<div class="row g-3 mb-3">
+  <div class="col-md-3"><div class="card p-3"><small class="text-muted">Owner</small><h6>{{ opportunity.owner.full_name if opportunity.owner else '-' }}</h6></div></div>
+</div>
+
+{% if opportunity.stage not in ['Won', 'Lost'] and has_permission(current_user, 'opportunity', 'edit') %}
+<div class="card p-3 mb-3">
+  <h6 class="fw-bold">Close this Opportunity</h6>
+  <div class="row g-2">
+    <div class="col-md-6">
+      <form method="POST" action="{{ url_for('crm.close_opportunity', opportunity_id=opportunity.id) }}" class="d-flex gap-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="outcome" value="Won">
+        <input type="text" name="close_reason" class="form-control" placeholder="Reason for winning (optional)">
+        <button class="btn btn-success text-nowrap" onclick="return confirm('Mark as Won?');">Mark Won</button>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <form method="POST" action="{{ url_for('crm.close_opportunity', opportunity_id=opportunity.id) }}" class="d-flex gap-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="outcome" value="Lost">
+        <input type="text" name="close_reason" class="form-control" placeholder="Reason for losing (optional)">
+        <button class="btn btn-danger text-nowrap" onclick="return confirm('Mark as Lost?');">Mark Lost</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if opportunity.close_reason %}
+<div class="alert alert-secondary"><strong>Close Reason:</strong> {{ opportunity.close_reason }}</div>
+{% endif %}
+
+<div class="card p-3">
+  <h6 class="fw-bold">Related Quotations</h6>
+  <table class="table table-sm">
+    <thead><tr><th>Quote #</th><th>Status</th><th>Amount</th></tr></thead>
+    <tbody>
+      {% for q in opportunity.quotations %}
+      <tr>
+        <td><a href="{{ url_for('quotation.view_quotation', quote_id=q.id) }}">{{ q.quote_number }}</a></td>
+        <td>{{ q.status }}</td>
+        <td>₹{{ "%.2f"|format(q.total_amount) }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3" class="text-muted text-center">None yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

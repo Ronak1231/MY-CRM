@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Profit &amp; Loss - Reports{% endblock %}
+{% block content %}
+<h4 class="fw-bold mb-3">Profit &amp; Loss</h4>
+<div class="card p-3 mb-3">
+  <form class="row g-2">
+    <div class="col-md-3"><label class="form-label small">From</label><input type="date" class="form-control" name="start" value="{{ start }}"></div>
+    <div class="col-md-3"><label class="form-label small">To</label><input type="date" class="form-control" name="end" value="{{ end }}"></div>
+    <div class="col-md-2 align-self-end"><button class="btn btn-outline-primary w-100">Filter</button></div>
+  </form>
+</div>
+
+<div class="card p-4 mb-3">
+  <table class="table table-borderless mb-0">
+    <tr><td>Sales Revenue</td><td class="text-end">₹{{ "%.2f"|format(total_revenue) }}</td></tr>
+    <tr><td>Cost of Goods Sold (COGS)</td><td class="text-end">(₹{{ "%.2f"|format(total_cogs) }})</td></tr>
+    <tr class="border-top"><th>Gross Profit</th><th class="text-end">₹{{ "%.2f"|format(gross_profit) }}</th></tr>
+    <tr><td>Other Purchase Spend (Purchase Requests)</td><td class="text-end">(₹{{ "%.2f"|format(total_purchase_spend) }})</td></tr>
+    <tr class="border-top"><th>Net Profit / Loss</th><th class="text-end {{ 'text-success' if net_profit >= 0 else 'text-danger' }}">₹{{ "%.2f"|format(net_profit) }}</th></tr>
+  </table>
+</div>
+
+<div class="card p-3">
+  <h6 class="fw-bold">Monthly Breakdown (Sales)</h6>
+  <table class="table table-sm">
+    <thead><tr><th>Month</th><th>Revenue</th><th>Cost</th><th>Gross Profit</th></tr></thead>
+    <tbody>
+      {% for month, values in monthly.items() %}
+      <tr>
+        <td>{{ month }}</td>
+        <td>₹{{ "%.2f"|format(values.revenue) }}</td>
+        <td>₹{{ "%.2f"|format(values.cost) }}</td>
+        <td class="{{ 'text-success' if (values.revenue - values.cost) >= 0 else 'text-danger' }}">₹{{ "%.2f"|format(values.revenue - values.cost) }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-center text-muted py-4">No sales data in this range.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

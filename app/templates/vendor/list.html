@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Vendors{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">Vendors</h4>
+  {% if has_permission(current_user, 'vendor', 'create') %}
+  <a href="{{ url_for('vendor.new_vendor') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Vendor</a>
+  {% endif %}
+</div>
+<div class="card p-3 mb-3">
+  <form class="row g-2">
+    <div class="col-md-4">
+      <input type="text" class="form-control" name="q" value="{{ q }}" placeholder="Search by name...">
+    </div>
+    <div class="col-auto"><button class="btn btn-outline-primary">Search</button></div>
+  </form>
+</div>
+<div class="card p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Name</th><th>Contact</th><th>City</th><th>Country</th><th>Owner</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for v in vendors %}
+      <tr>
+        <td><a href="{{ url_for('vendor.view_vendor', vendor_id=v.id) }}">{{ v.name }}</a></td>
+        <td>{{ v.email or '-' }} {% if v.phone %}<br><small class="text-muted">{{ v.phone }}</small>{% endif %}</td>
+        <td>{{ v.city or '-' }}</td>
+        <td>{{ v.country or '-' }}</td>
+        <td>{{ v.owner.full_name if v.owner else '-' }}</td>
+        <td>{% if v.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+        <td class="text-end">
+          {% if has_permission(current_user, 'vendor', 'edit') %}
+          <a href="{{ url_for('vendor.edit_vendor', vendor_id=v.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          {% endif %}
+          {% if has_permission(current_user, 'vendor', 'delete') %}
+          <form method="POST" action="{{ url_for('vendor.delete_vendor', vendor_id=v.id) }}" class="d-inline" onsubmit="return confirm('Delete this vendor?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">No vendors found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - CRM{% endblock %}
+{% block content %}
+<h3 class="fw-bold mb-4">Welcome back, {{ current_user.full_name.split(' ')[0] }} 👋</h3>
+
+<div class="row g-3 mb-4">
+  {% if 'vendors' in stats %}
+  <div class="col-md-3"><div class="stat-card bg-grad-blue"><small>VENDORS</small><h3>{{ stats.vendors }}</h3></div></div>
+  {% endif %}
+  {% if 'products' in stats %}
+  <div class="col-md-3"><div class="stat-card bg-grad-purple"><small>PRODUCTS</small><h3>{{ stats.products }}</h3></div></div>
+  {% endif %}
+  {% if 'purchase_requests' in stats %}
+  <div class="col-md-3"><div class="stat-card bg-grad-orange"><small>PURCHASE REQUESTS</small><h3>{{ stats.purchase_requests }}</h3></div></div>
+  {% endif %}
+  {% if 'accounts' in stats %}
+  <div class="col-md-3"><div class="stat-card bg-grad-green"><small>ACCOUNTS</small><h3>{{ stats.accounts }}</h3></div></div>
+  {% endif %}
+</div>
+
+<div class="row g-3 mb-4">
+  {% if 'leads' in stats %}
+  <div class="col-md-3"><div class="stat-card bg-grad-blue"><small>LEADS</small><h3>{{ stats.leads }}</h3></div></div>
+  {% endif %}
+  {% if 'opportunities' in stats %}
+  <div class="col-md-3"><div class="stat-card bg-grad-purple"><small>OPEN OPPORTUNITIES</small><h3>{{ stats.opportunities_open }}</h3></div></div>
+  <div class="col-md-3"><div class="stat-card bg-grad-green"><small>WON</small><h3>{{ stats.opportunities_won }}</h3></div></div>
+  <div class="col-md-3"><div class="stat-card bg-grad-red"><small>LOST</small><h3>{{ stats.opportunities_lost }}</h3></div></div>
+  {% endif %}
+</div>
+
+<div class="row g-3">
+  {% if 'quotations' in stats %}
+  <div class="col-md-3"><div class="stat-card bg-grad-orange"><small>QUOTATIONS</small><h3>{{ stats.quotations }}</h3></div></div>
+  {% endif %}
+  {% if 'sales_orders' in stats %}
+  <div class="col-md-3"><div class="stat-card bg-grad-blue"><small>SALES ORDERS</small><h3>{{ stats.sales_orders }}</h3></div></div>
+  <div class="col-md-3"><div class="stat-card bg-grad-green"><small>TOTAL REVENUE</small><h3>₹{{ "%.2f"|format(stats.sales_revenue) }}</h3></div></div>
+  <div class="col-md-3"><div class="stat-card bg-grad-purple"><small>TOTAL PROFIT</small><h3>₹{{ "%.2f"|format(stats.sales_profit) }}</h3></div></div>
+  {% endif %}
+</div>
+
+{% if 'pipeline_value' in stats %}
+<div class="card p-3 mt-4">
+  <h6 class="fw-bold">Open Pipeline Value</h6>
+  <h3 class="text-primary">₹{{ "%.2f"|format(stats.pipeline_value) }}</h3>
+  <small class="text-muted">Total value of opportunities not yet Won or Lost.</small>
+</div>
+{% endif %}
+
+{% if not stats %}
+<div class="alert alert-info">You don't have view access to any modules yet. Ask your administrator to grant permissions.</div>
+{% endif %}
+{% endblock %}

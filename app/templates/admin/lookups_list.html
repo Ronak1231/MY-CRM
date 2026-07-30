@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Lookups - Admin{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h4 class="fw-bold mb-0">Lookups</h4>
+    <p class="text-muted small mb-0">Admin-managed dropdown values used across the CRM (e.g. Unit, Product Category, Payment Terms, Industry). Add a new category here at any time.</p>
+  </div>
+  <a href="{{ url_for('admin.lookup_new') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Lookup Value</a>
+</div>
+
+<div class="card p-3 mb-3">
+  <form class="row g-2">
+    <div class="col-md-4">
+      <select class="form-select" name="category" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {% for c in categories %}<option value="{{ c }}" {% if category==c %}selected{% endif %}>{{ c }}</option>{% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+
+<div class="card p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Category</th><th>Value</th><th>Label</th><th>Order</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for e in entries %}
+      <tr>
+        <td><span class="badge bg-secondary">{{ e.category }}</span></td>
+        <td>{{ e.value }}</td>
+        <td>{{ e.label or '-' }}</td>
+        <td>{{ e.sort_order }}</td>
+        <td>{% if e.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+        <td class="text-end">
+          <a href="{{ url_for('admin.lookup_edit', lookup_id=e.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <form method="POST" action="{{ url_for('admin.lookup_delete', lookup_id=e.id) }}" class="d-inline" onsubmit="return confirm('Delete this lookup value?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="text-center text-muted py-4">No lookup values yet. Click "New Lookup Value" to add e.g. Unit = "pcs".</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

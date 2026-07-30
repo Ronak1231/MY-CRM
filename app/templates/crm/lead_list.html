@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Leads{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">Leads</h4>
+  {% if has_permission(current_user, 'lead', 'create') %}
+  <a href="{{ url_for('crm.new_lead') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Lead</a>
+  {% endif %}
+</div>
+<div class="card p-3 mb-3">
+  <form class="row g-2">
+    <div class="col-md-3">
+      <select class="form-select" name="status" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for s in statuses %}<option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+<div class="card p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Name</th><th>Company</th><th>Source</th><th>Status</th><th>Est. Value</th><th>Owner</th><th></th></tr></thead>
+    <tbody>
+      {% for lead in leads %}
+      <tr>
+        <td>{{ lead.name }}</td>
+        <td>{{ lead.company_name or '-' }}</td>
+        <td>{{ lead.source }}</td>
+        <td><span class="badge bg-secondary">{{ lead.status }}</span></td>
+        <td>₹{{ "%.2f"|format(lead.estimated_value) }}</td>
+        <td>{{ lead.owner.full_name if lead.owner else '-' }}</td>
+        <td class="text-end">
+          {% if has_permission(current_user, 'lead', 'edit') %}
+          <a href="{{ url_for('crm.edit_lead', lead_id=lead.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          {% endif %}
+          {% if lead.status != 'Converted' and has_permission(current_user, 'lead', 'edit') and has_permission(current_user, 'account', 'create') %}
+          <form method="POST" action="{{ url_for('crm.convert_lead', lead_id=lead.id) }}" class="d-inline" onsubmit="return confirm('Convert this lead to an Account + Opportunity?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-success">Convert</button>
+          </form>
+          {% endif %}
+          {% if has_permission(current_user, 'lead', 'delete') %}
+          <form method="POST" action="{{ url_for('crm.delete_lead', lead_id=lead.id) }}" class="d-inline" onsubmit="return confirm('Delete this lead?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">No leads found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

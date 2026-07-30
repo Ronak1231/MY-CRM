@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if lead else 'New' }} Lead{% endblock %}
+{% block content %}
+<h4 class="fw-bold mb-3">{{ 'Edit Lead' if lead else 'New Lead' }}</h4>
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="card p-3">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Name *</label>
+        <input type="text" class="form-control" name="name" value="{{ lead.name if lead else '' }}" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Company Name</label>
+        <input type="text" class="form-control" name="company_name" value="{{ lead.company_name if lead else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" value="{{ lead.email if lead else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="text" class="form-control" name="phone" value="{{ lead.phone if lead else '' }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Source</label>
+        <select class="form-select" name="source">
+          {% for s in sources %}
+          <option value="{{ s }}" {% if lead and lead.source==s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Status</label>
+        <select class="form-select" name="status">
+          {% for s in statuses %}
+          <option value="{{ s }}" {% if lead and lead.status==s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Estimated Value</label>
+        <input type="number" step="0.01" class="form-control" name="estimated_value" value="{{ lead.estimated_value if lead else 0 }}">
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" name="notes" rows="3">{{ lead.notes if lead else '' }}</textarea>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Owner</label>
+        <select class="form-select" name="owner_id">
+          {% for u in users %}
+          <option value="{{ u.id }}" {% if lead and lead.owner_id==u.id %}selected{% elif not lead and u.id==current_user.id %}selected{% endif %}>{{ u.full_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3">
+    <button type="submit" class="btn btn-primary">Save Lead</button>
+    <a href="{{ url_for('crm.list_leads') }}" class="btn btn-outline-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}

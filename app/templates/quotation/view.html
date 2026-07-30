@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ quote.quote_number }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">{{ quote.quote_number }} <span class="badge bg-info text-dark">{{ quote.status }}</span></h4>
+  <div>
+    {% if has_permission(current_user, 'quotation', 'edit') %}
+    <a href="{{ url_for('quotation.edit_quotation', quote_id=quote.id) }}" class="btn btn-outline-primary">Edit</a>
+    {% endif %}
+    {% if not quote.sales_order and has_permission(current_user, 'quotation', 'edit') and has_permission(current_user, 'sales_order', 'create') %}
+    <form method="POST" action="{{ url_for('quotation.convert_to_sales_order', quote_id=quote.id) }}" class="d-inline" onsubmit="return confirm('Convert this quotation into a Sales Order?');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn-success"><i class="bi bi-arrow-right-circle"></i> Convert to Sales Order</button>
+    </form>
+    {% elif quote.sales_order %}
+    <a href="{{ url_for('sales.view_sales_order', so_id=quote.sales_order.id) }}" class="btn btn-outline-success">View Sales Order {{ quote.sales_order.so_number }}</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4"><div class="card p-3"><small class="text-muted">Account</small><h6><a href="{{ url_for('crm.view_account', account_id=quote.account_id) }}">{{ quote.account.name }}</a></h6></div></div>
+  <div class="col-md-4"><div class="card p-3"><small class="text-muted">Quote Date</small><h6>{{ quote.quote_date }}</h6></div></div>
+  <div class="col-md-4"><div class="card p-3"><small class="text-muted">Valid Until</small><h6>{{ quote.valid_until or '-' }}</h6></div></div>
+  <div class="col-md-4"><div class="card p-3"><small class="text-muted">Owner</small><h6>{{ quote.owner.full_name if quote.owner else '-' }}</h6></div></div>
+</div>
+
+<div class="card p-3">
+  <h6 class="fw-bold">Line Items</h6>
+  <table class="table">
+    <thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Disc %</th><th>Line Total</th></tr></thead>
+    <tbody>
+      {% for item in quote.items %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>₹{{ "%.2f"|format(item.unit_price) }}</td>
+        <td>{{ item.discount_pct }}%</td>
+        <td>₹{{ "%.2f"|format(item.line_total) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot><tr><th colspan="4" class="text-end">Grand Total</th><th>₹{{ "%.2f"|format(quote.total_amount) }}</th></tr></tfoot>
+  </table>
+  {% if quote.notes %}<p class="text-muted mt-2"><strong>Notes:</strong> {{ quote.notes }}</p>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Purchase Requests{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">Purchase Requests</h4>
+  {% if has_permission(current_user, 'purchase_request', 'create') %}
+  <a href="{{ url_for('purchase.new_purchase_request') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Purchase Request</a>
+  {% endif %}
+</div>
+<div class="card p-3 mb-3">
+  <form class="row g-2">
+    <div class="col-md-3">
+      <select class="form-select" name="status" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for s in statuses %}<option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+<div class="card p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>PR #</th><th>Vendor</th><th>Status</th><th>Request Date</th><th>Amount</th><th>Owner</th><th></th></tr></thead>
+    <tbody>
+      {% for pr in prs %}
+      <tr>
+        <td><a href="{{ url_for('purchase.view_purchase_request', pr_id=pr.id) }}">{{ pr.pr_number }}</a></td>
+        <td>{{ pr.vendor.name }}</td>
+        <td><span class="badge bg-info text-dark">{{ pr.status }}</span></td>
+        <td>{{ pr.request_date }}</td>
+        <td>₹{{ "%.2f"|format(pr.total_amount) }}</td>
+        <td>{{ pr.owner.full_name if pr.owner else '-' }}</td>
+        <td class="text-end">
+          {% if has_permission(current_user, 'purchase_request', 'edit') %}
+          <a href="{{ url_for('purchase.edit_purchase_request', pr_id=pr.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          {% endif %}
+          {% if has_permission(current_user, 'purchase_request', 'delete') %}
+          <form method="POST" action="{{ url_for('purchase.delete_purchase_request', pr_id=pr.id) }}" class="d-inline" onsubmit="return confirm('Delete this purchase request?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted py-4">No purchase requests found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

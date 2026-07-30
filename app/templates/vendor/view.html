@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ vendor.name }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">{{ vendor.name }}</h4>
+  {% if has_permission(current_user, 'vendor', 'edit') %}
+  <a href="{{ url_for('vendor.edit_vendor', vendor_id=vendor.id) }}" class="btn btn-outline-primary">Edit</a>
+  {% endif %}
+</div>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h6 class="fw-bold">Details</h6>
+      <table class="table table-sm mb-0">
+        <tr><th>Email</th><td>{{ vendor.email or '-' }}</td></tr>
+        <tr><th>Phone</th><td>{{ vendor.phone or '-' }}</td></tr>
+        <tr><th>Address</th><td>{{ vendor.address or '-' }}, {{ vendor.city or '' }}, {{ vendor.country or '' }}</td></tr>
+        <tr><th>GST No.</th><td>{{ vendor.gst_number or '-' }}</td></tr>
+        <tr><th>Payment Terms</th><td>{{ vendor.payment_terms or '-' }}</td></tr>
+        <tr><th>Status</th><td>{% if vendor.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td></tr>
+        <tr><th>Owner</th><td>{{ vendor.owner.full_name if vendor.owner else '-' }}</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h6 class="fw-bold">Contact Persons</h6>
+      {% for c in vendor.contacts %}
+      <div class="border-bottom py-1">
+        <strong>{{ c.name }}</strong> {% if c.is_primary %}<span class="badge bg-info">Primary</span>{% endif %}<br>
+        <small class="text-muted">{{ c.designation or '' }} — {{ c.email or '' }} {{ c.phone or '' }}</small>
+      </div>
+      {% else %}
+      <p class="text-muted">No contact persons added yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="card p-3 mt-3">
+  <h6 class="fw-bold">Purchase Requests</h6>
+  <table class="table table-sm">
+    <thead><tr><th>PR #</th><th>Status</th><th>Date</th><th>Amount</th></tr></thead>
+    <tbody>
+      {% for pr in vendor.purchase_requests %}
+      <tr>
+        <td><a href="{{ url_for('purchase.view_purchase_request', pr_id=pr.id) }}">{{ pr.pr_number }}</a></td>
+        <td>{{ pr.status }}</td>
+        <td>{{ pr.request_date }}</td>
+        <td>₹{{ "%.2f"|format(pr.total_amount) }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-muted text-center">No purchase requests yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

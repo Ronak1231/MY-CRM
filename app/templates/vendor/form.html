@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if vendor else 'New' }} Vendor{% endblock %}
+{% block content %}
+<h4 class="fw-bold mb-3">{{ 'Edit Vendor' if vendor else 'New Vendor' }}</h4>
+<form method="POST">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="card p-3">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Vendor Name *</label>
+        <input type="text" class="form-control" name="name" value="{{ vendor.name if vendor else '' }}" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Company Reg. No</label>
+        <input type="text" class="form-control" name="company_reg_no" value="{{ vendor.company_reg_no if vendor else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" value="{{ vendor.email if vendor else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="text" class="form-control" name="phone" value="{{ vendor.phone if vendor else '' }}">
+      </div>
+      <div class="col-md-12">
+        <label class="form-label">Address</label>
+        <input type="text" class="form-control" name="address" value="{{ vendor.address if vendor else '' }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">City</label>
+        <input type="text" class="form-control" name="city" value="{{ vendor.city if vendor else '' }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Country</label>
+        <input type="text" class="form-control" name="country" value="{{ vendor.country if vendor else '' }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">GST / Tax Number</label>
+        <input type="text" class="form-control" name="gst_number" value="{{ vendor.gst_number if vendor else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Payment Terms</label>
+        <select class="form-select" name="payment_terms">
+          <option value="">-- Select --</option>
+          {% for pt in payment_terms_options %}
+          <option value="{{ pt.value }}" {% if vendor and vendor.payment_terms==pt.value %}selected{% endif %}>{{ pt.display_label }}</option>
+          {% endfor %}
+          {% if vendor and vendor.payment_terms and vendor.payment_terms not in payment_terms_options|map(attribute='value')|list %}
+          <option value="{{ vendor.payment_terms }}" selected>{{ vendor.payment_terms }} (custom)</option>
+          {% endif %}
+        </select>
+        <div class="form-text">Manage this list under Admin &gt; Lookups (category: payment_terms).</div>
+      </div>
+      <div class="col-md-6 form-check mt-4">
+        <input type="checkbox" class="form-check-input" name="is_active" id="is_active" {% if not vendor or vendor.is_active %}checked{% endif %}>
+        <label class="form-check-label" for="is_active">Active</label>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Owner</label>
+        <select class="form-select" name="owner_id">
+          {% for u in users %}
+          <option value="{{ u.id }}" {% if vendor and vendor.owner_id==u.id %}selected{% elif not vendor and u.id==current_user.id %}selected{% endif %}>{{ u.full_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3">
+    <button type="submit" class="btn btn-primary">Save Vendor</button>
+    <a href="{{ url_for('vendor.list_vendors') }}" class="btn btn-outline-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}

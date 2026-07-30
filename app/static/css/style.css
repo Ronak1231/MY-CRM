@@ -1,0 +1,13 @@
+body { background-color: #f4f6f9; }
+.card { border: none; box-shadow: 0 1px 3px rgba(0,0,0,.08); border-radius: .6rem; }
+.stat-card { border-radius: .8rem; color: #fff; padding: 1.25rem; }
+.stat-card h3 { font-weight: 700; margin-bottom: .1rem; }
+.stat-card small { opacity: .85; }
+.bg-grad-blue { background: linear-gradient(135deg,#4e73df,#224abe); }
+.bg-grad-green { background: linear-gradient(135deg,#1cc88a,#13855c); }
+.bg-grad-red { background: linear-gradient(135deg,#e74a3b,#a52a1f); }
+.bg-grad-orange { background: linear-gradient(135deg,#f6c23e,#dda20a); }
+.bg-grad-purple { background: linear-gradient(135deg,#8540f5,#5a2ea6); }
+.table thead { background-color: #eef1f6; }
+.badge-stage { font-size: .78rem; padding: .35em .6em; }
+.permission-table th, .permission-table td { text-align: center; vertical-align: middle; }

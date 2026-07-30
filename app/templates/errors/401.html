@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center py-5">
+  <h1 class="display-4 text-warning"><i class="bi bi-shield-lock"></i> 401</h1>
+  <p class="lead">Please log in to continue.</p>
+  <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Go to Login</a>
+</div>
+{% endblock %}

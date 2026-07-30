@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Quotations{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="fw-bold">Quotations</h4>
+  {% if has_permission(current_user, 'quotation', 'create') %}
+  <a href="{{ url_for('quotation.new_quotation') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Quotation</a>
+  {% endif %}
+</div>
+<div class="card p-3 mb-3">
+  <form class="row g-2">
+    <div class="col-md-3">
+      <select class="form-select" name="status" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for s in statuses %}<option value="{{ s }}" {% if status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+      </select>
+    </div>
+  </form>
+</div>
+<div class="card p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Quote #</th><th>Account</th><th>Status</th><th>Quote Date</th><th>Valid Until</th><th>Amount</th><th>Owner</th><th></th></tr></thead>
+    <tbody>
+      {% for q in quotes %}
+      <tr>
+        <td><a href="{{ url_for('quotation.view_quotation', quote_id=q.id) }}">{{ q.quote_number }}</a></td>
+        <td>{{ q.account.name }}</td>
+        <td><span class="badge bg-info text-dark">{{ q.status }}</span></td>
+        <td>{{ q.quote_date }}</td>
+        <td>{{ q.valid_until or '-' }}</td>
+        <td>₹{{ "%.2f"|format(q.total_amount) }}</td>
+        <td>{{ q.owner.full_name if q.owner else '-' }}</td>
+        <td class="text-end">
+          {% if has_permission(current_user, 'quotation', 'edit') %}
+          <a href="{{ url_for('quotation.edit_quotation', quote_id=q.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+          {% endif %}
+          {% if has_permission(current_user, 'quotation', 'delete') %}
+          <form method="POST" action="{{ url_for('quotation.delete_quotation', quote_id=q.id) }}" class="d-inline" onsubmit="return confirm('Delete this quotation?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-center text-muted py-4">No quotations found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

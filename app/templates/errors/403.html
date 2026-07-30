@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center py-5">
+  <h1 class="display-4 text-danger"><i class="bi bi-shield-exclamation"></i> 403</h1>
+  <p class="lead">You don't have permission to access this page.</p>
+  <p class="text-muted">Contact your administrator if you believe this is a mistake.</p>
+  <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary">Back to Dashboard</a>
+</div>
+{% endblock %}
