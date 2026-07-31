@@ -12,6 +12,7 @@
   <div class="col-md-6">
     <div class="card p-3">
       <h6 class="fw-bold">Details</h6>
+      <div class="table-responsive">
       <table class="table table-sm mb-0">
         <tr><th>Industry</th><td>{{ account.industry or '-' }}</td></tr>
         <tr><th>Email</th><td>{{ account.email or '-' }}</td></tr>
@@ -20,6 +21,7 @@
         <tr><th>Website</th><td>{{ account.website or '-' }}</td></tr>
         <tr><th>Owner</th><td>{{ account.owner.full_name if account.owner else '-' }}</td></tr>
       </table>
+      </div>
     </div>
   </div>
   <div class="col-md-6">
@@ -41,6 +43,7 @@
   <div class="col-md-6">
     <div class="card p-3">
       <h6 class="fw-bold">Opportunities</h6>
+      <div class="table-responsive">
       <table class="table table-sm">
         <thead><tr><th>Name</th><th>Stage</th><th>Amount</th></tr></thead>
         <tbody>
@@ -55,11 +58,13 @@
           {% endfor %}
         </tbody>
       </table>
+      </div>
     </div>
   </div>
   <div class="col-md-6">
     <div class="card p-3">
       <h6 class="fw-bold">Sales Orders</h6>
+      <div class="table-responsive">
       <table class="table table-sm">
         <thead><tr><th>SO #</th><th>Status</th><th>Total</th></tr></thead>
         <tbody>
@@ -74,6 +79,7 @@
           {% endfor %}
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 </div>

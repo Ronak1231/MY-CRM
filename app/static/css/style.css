@@ -11,3 +11,57 @@ body { background-color: #f4f6f9; }
 .table thead { background-color: #eef1f6; }
 .badge-stage { font-size: .78rem; padding: .35em .6em; }
 .permission-table th, .permission-table td { text-align: center; vertical-align: middle; }
+
+/* ---------------------------------------------------------------
+   Responsive layout: phones (<576px) and tablets (576-991px)
+   --------------------------------------------------------------- */
+
+/* Let scrollable tables show a hint they're scrollable, and stop
+   them from squishing text into unreadable widths */
+.table-responsive {
+  -webkit-overflow-scrolling: touch;
+}
+.table-responsive .table {
+  min-width: 560px;
+}
+.table-responsive .table.table-sm {
+  min-width: 0; /* small detail-key/value tables can shrink freely */
+}
+
+/* Tablet: tighten page padding a bit, cards get less internal padding */
+@media (max-width: 991.98px) {
+  .container-fluid.px-4 { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+  .stat-card { padding: 1rem; }
+  .stat-card h3 { font-size: 1.4rem; }
+}
+
+/* Phone: everything gets tighter, buttons/actions wrap cleanly,
+   headers stack instead of forcing a squeeze */
+@media (max-width: 575.98px) {
+  .container-fluid.px-4 { padding-left: .75rem !important; padding-right: .75rem !important; padding-top: 1rem !important; padding-bottom: 1rem !important; }
+  .card.p-3 { padding: .85rem !important; }
+  .stat-card { padding: .85rem; border-radius: .6rem; }
+  .stat-card h3 { font-size: 1.2rem; }
+  .stat-card small { font-size: .68rem; }
+  h3.fw-bold, h4.fw-bold { font-size: 1.25rem; }
+
+  /* Page header rows (title + action button) stack on very small screens */
+  .d-flex.justify-content-between.align-items-center.mb-3 {
+    flex-wrap: wrap;
+    row-gap: .5rem;
+  }
+  .d-flex.justify-content-between.align-items-center.mb-3 > h4 { margin-bottom: 0; }
+  .d-flex.justify-content-between.align-items-center.mb-3 > a.btn,
+  .d-flex.justify-content-between.align-items-center.mb-3 > button.btn {
+    width: 100%;
+  }
+
+  /* Search bars: full-width input, full-width button below it */
+  .card form.row.g-2 .col-md-4,
+  .card form.row.g-2 .col-auto { width: 100%; }
+  .card form.row.g-2 .col-auto .btn { width: 100%; }
+
+  /* Row action buttons (Edit/Delete) wrap instead of overflowing the cell */
+  td.text-end { white-space: normal; }
+  td.text-end .btn, td.text-end form { display: inline-block; margin-bottom: .25rem; }
+}

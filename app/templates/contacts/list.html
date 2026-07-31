@@ -9,6 +9,7 @@
   {% endif %}
 </div>
 <div class="card p-3">
+  <div class="table-responsive">
   <table class="table table-hover align-middle">
     <thead><tr><th>Name</th><th>Designation</th><th>{{ 'Vendor' if kind=='purchase' else 'Account' }}</th><th>Email</th><th>Phone</th><th>Owner</th><th></th></tr></thead>
     <tbody>
@@ -37,5 +38,6 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 </div>
 {% endblock %}

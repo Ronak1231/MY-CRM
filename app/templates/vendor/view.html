@@ -11,6 +11,7 @@
   <div class="col-md-6">
     <div class="card p-3">
       <h6 class="fw-bold">Details</h6>
+      <div class="table-responsive">
       <table class="table table-sm mb-0">
         <tr><th>Email</th><td>{{ vendor.email or '-' }}</td></tr>
         <tr><th>Phone</th><td>{{ vendor.phone or '-' }}</td></tr>
@@ -20,6 +21,7 @@
         <tr><th>Status</th><td>{% if vendor.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td></tr>
         <tr><th>Owner</th><td>{{ vendor.owner.full_name if vendor.owner else '-' }}</td></tr>
       </table>
+      </div>
     </div>
   </div>
   <div class="col-md-6">
@@ -39,6 +41,7 @@
 
 <div class="card p-3 mt-3">
   <h6 class="fw-bold">Purchase Requests</h6>
+  <div class="table-responsive">
   <table class="table table-sm">
     <thead><tr><th>PR #</th><th>Status</th><th>Date</th><th>Amount</th></tr></thead>
     <tbody>
@@ -54,5 +57,6 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 </div>
 {% endblock %}

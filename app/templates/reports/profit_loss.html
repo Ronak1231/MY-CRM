@@ -11,6 +11,7 @@
 </div>
 
 <div class="card p-4 mb-3">
+  <div class="table-responsive">
   <table class="table table-borderless mb-0">
     <tr><td>Sales Revenue</td><td class="text-end">₹{{ "%.2f"|format(total_revenue) }}</td></tr>
     <tr><td>Cost of Goods Sold (COGS)</td><td class="text-end">(₹{{ "%.2f"|format(total_cogs) }})</td></tr>
@@ -18,10 +19,12 @@
     <tr><td>Other Purchase Spend (Purchase Requests)</td><td class="text-end">(₹{{ "%.2f"|format(total_purchase_spend) }})</td></tr>
     <tr class="border-top"><th>Net Profit / Loss</th><th class="text-end {{ 'text-success' if net_profit >= 0 else 'text-danger' }}">₹{{ "%.2f"|format(net_profit) }}</th></tr>
   </table>
+  </div>
 </div>
 
 <div class="card p-3">
   <h6 class="fw-bold">Monthly Breakdown (Sales)</h6>
+  <div class="table-responsive">
   <table class="table table-sm">
     <thead><tr><th>Month</th><th>Revenue</th><th>Cost</th><th>Gross Profit</th></tr></thead>
     <tbody>
@@ -37,5 +40,6 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 </div>
 {% endblock %}

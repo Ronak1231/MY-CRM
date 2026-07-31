@@ -27,6 +27,7 @@
 
 <div class="card p-3">
   <h6 class="fw-bold">Line Items</h6>
+  <div class="table-responsive">
   <table class="table">
     <thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Disc %</th><th>Line Total</th></tr></thead>
     <tbody>
@@ -42,6 +43,7 @@
     </tbody>
     <tfoot><tr><th colspan="4" class="text-end">Grand Total</th><th>₹{{ "%.2f"|format(quote.total_amount) }}</th></tr></tfoot>
   </table>
+  </div>
   {% if quote.notes %}<p class="text-muted mt-2"><strong>Notes:</strong> {{ quote.notes }}</p>{% endif %}
 </div>
 {% endblock %}

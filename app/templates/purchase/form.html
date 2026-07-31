@@ -44,6 +44,7 @@
 
   <div class="card p-3 mb-3">
     <h6 class="fw-bold">Line Items</h6>
+    <div class="table-responsive">
     <table class="table" id="items-table">
       <thead><tr><th>Product</th><th style="width:120px">Qty</th><th style="width:150px">Unit Cost</th><th style="width:130px">Line Total</th><th></th></tr></thead>
       <tbody id="items-body">
@@ -66,6 +67,7 @@
         {% endif %}
       </tbody>
     </table>
+    </div>
     <button type="button" class="btn btn-sm btn-outline-primary" id="add-row">+ Add Line Item</button>
     <div class="text-end mt-2"><strong>Grand Total: ₹<span id="grand-total">0.00</span></strong></div>
   </div>

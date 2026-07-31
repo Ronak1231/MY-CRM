@@ -5,38 +5,38 @@
 
 <div class="row g-3 mb-4">
   {% if 'vendors' in stats %}
-  <div class="col-md-3"><div class="stat-card bg-grad-blue"><small>VENDORS</small><h3>{{ stats.vendors }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-blue"><small>VENDORS</small><h3>{{ stats.vendors }}</h3></div></div>
   {% endif %}
   {% if 'products' in stats %}
-  <div class="col-md-3"><div class="stat-card bg-grad-purple"><small>PRODUCTS</small><h3>{{ stats.products }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-purple"><small>PRODUCTS</small><h3>{{ stats.products }}</h3></div></div>
   {% endif %}
   {% if 'purchase_requests' in stats %}
-  <div class="col-md-3"><div class="stat-card bg-grad-orange"><small>PURCHASE REQUESTS</small><h3>{{ stats.purchase_requests }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-orange"><small>PURCHASE REQUESTS</small><h3>{{ stats.purchase_requests }}</h3></div></div>
   {% endif %}
   {% if 'accounts' in stats %}
-  <div class="col-md-3"><div class="stat-card bg-grad-green"><small>ACCOUNTS</small><h3>{{ stats.accounts }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-green"><small>ACCOUNTS</small><h3>{{ stats.accounts }}</h3></div></div>
   {% endif %}
 </div>
 
 <div class="row g-3 mb-4">
   {% if 'leads' in stats %}
-  <div class="col-md-3"><div class="stat-card bg-grad-blue"><small>LEADS</small><h3>{{ stats.leads }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-blue"><small>LEADS</small><h3>{{ stats.leads }}</h3></div></div>
   {% endif %}
   {% if 'opportunities' in stats %}
-  <div class="col-md-3"><div class="stat-card bg-grad-purple"><small>OPEN OPPORTUNITIES</small><h3>{{ stats.opportunities_open }}</h3></div></div>
-  <div class="col-md-3"><div class="stat-card bg-grad-green"><small>WON</small><h3>{{ stats.opportunities_won }}</h3></div></div>
-  <div class="col-md-3"><div class="stat-card bg-grad-red"><small>LOST</small><h3>{{ stats.opportunities_lost }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-purple"><small>OPEN OPPORTUNITIES</small><h3>{{ stats.opportunities_open }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-green"><small>WON</small><h3>{{ stats.opportunities_won }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-red"><small>LOST</small><h3>{{ stats.opportunities_lost }}</h3></div></div>
   {% endif %}
 </div>
 
 <div class="row g-3">
   {% if 'quotations' in stats %}
-  <div class="col-md-3"><div class="stat-card bg-grad-orange"><small>QUOTATIONS</small><h3>{{ stats.quotations }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-orange"><small>QUOTATIONS</small><h3>{{ stats.quotations }}</h3></div></div>
   {% endif %}
   {% if 'sales_orders' in stats %}
-  <div class="col-md-3"><div class="stat-card bg-grad-blue"><small>SALES ORDERS</small><h3>{{ stats.sales_orders }}</h3></div></div>
-  <div class="col-md-3"><div class="stat-card bg-grad-green"><small>TOTAL REVENUE</small><h3>₹{{ "%.2f"|format(stats.sales_revenue) }}</h3></div></div>
-  <div class="col-md-3"><div class="stat-card bg-grad-purple"><small>TOTAL PROFIT</small><h3>₹{{ "%.2f"|format(stats.sales_profit) }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-blue"><small>SALES ORDERS</small><h3>{{ stats.sales_orders }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-green"><small>TOTAL REVENUE</small><h3>₹{{ "%.2f"|format(stats.sales_revenue) }}</h3></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card bg-grad-purple"><small>TOTAL PROFIT</small><h3>₹{{ "%.2f"|format(stats.sales_profit) }}</h3></div></div>
   {% endif %}
 </div>
 

@@ -24,6 +24,7 @@
 
 <div class="card p-3">
   <h6 class="fw-bold">Line Items</h6>
+  <div class="table-responsive">
   <table class="table">
     <thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Disc %</th><th>Line Total</th><th>Cost</th></tr></thead>
     <tbody>
@@ -44,6 +45,7 @@
       <tr><th colspan="4" class="text-end">Profit</th><th colspan="2" class="{{ 'text-success' if order.profit >= 0 else 'text-danger' }}">₹{{ "%.2f"|format(order.profit) }}</th></tr>
     </tfoot>
   </table>
+  </div>
   {% if order.notes %}<p class="text-muted mt-2"><strong>Notes:</strong> {{ order.notes }}</p>{% endif %}
 </div>
 {% endblock %}
