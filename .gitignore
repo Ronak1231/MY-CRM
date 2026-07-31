@@ -3,3 +3,6 @@
 __pycache__/
 instance/*.db
 venv/
+app/templates/v1/base.html
+app\blueprints\OLD
+app\templates\v1 base.html
