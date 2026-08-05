@@ -1,4 +1,4 @@
-# BizSuite — Vendor / Sales / CRM Management System
+# Nexus — Vendor / Sales / CRM Management System
 
 A production-structured Flask application covering the full purchase-to-cash
 and lead-to-cash lifecycle, with an admin-managed, per-module RBAC system.
