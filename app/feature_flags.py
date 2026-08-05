@@ -43,6 +43,14 @@ FEATURE_FLAGS = {
     "quotation": True,
     "sales_order": True,
     "report": True,
+    # show_demo_credentials:
+    #   True  -> Login page shows a "Demo admin login" box (with a
+    #            show/hide eye toggle) pre-filled with the seeded
+    #            admin@crm.com / Admin@123 credentials, for quick access
+    #            during demos/testing.
+    #   False -> The box is completely removed from the page (not just
+    #            hidden with CSS). Flip this to False before going live.
+    "show_demo_credentials": True,
 }
 
 

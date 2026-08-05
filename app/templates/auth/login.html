@@ -21,8 +21,39 @@
         </div>
         <button type="submit" class="btn btn-primary w-100">Sign in</button>
       </form>
+      {% if feature_enabled("show_demo_credentials") %}
       <hr>
-      <!-- <p class="small text-muted mb-0">Default admin: <code>admin@bizsuite.com</code> / <code>Admin@123</code></p> -->
+      <div class="border rounded p-2 small">
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="text-muted fw-semibold">Demo admin login</span>
+          <button type="button" id="toggle-demo-creds" class="btn btn-sm btn-link p-0 text-decoration-none">
+            <i class="bi bi-eye" id="toggle-demo-creds-icon"></i>
+            <span id="toggle-demo-creds-text">Show</span>
+          </button>
+        </div>
+        <div id="demo-creds-body" class="d-none mt-2">
+          <div>Email: <code>admin@crm.com</code></div>
+          <div>Password: <code>Admin@123</code></div>
+          <button type="button" id="fill-demo-creds" class="btn btn-sm btn-outline-secondary mt-2">
+            Autofill
+          </button>
+        </div>
+      </div>
+      <script>
+        document.getElementById("toggle-demo-creds").addEventListener("click", function () {
+          const body = document.getElementById("demo-creds-body");
+          const icon = document.getElementById("toggle-demo-creds-icon");
+          const text = document.getElementById("toggle-demo-creds-text");
+          const hidden = body.classList.toggle("d-none");
+          icon.className = hidden ? "bi bi-eye" : "bi bi-eye-slash";
+          text.textContent = hidden ? "Show" : "Hide";
+        });
+        document.getElementById("fill-demo-creds").addEventListener("click", function () {
+          document.querySelector('input[name="email"]').value = "admin@crm.com";
+          document.querySelector('input[name="password"]').value = "Admin@123";
+        });
+      </script>
+      {% endif %}
     </div>
   </div>
 </div>
